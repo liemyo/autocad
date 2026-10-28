@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="description" content="Amatu CAD — aplikasi CAD 2D di browser dengan tata letak, perintah, shortcut, dan gesture gaya AutoCAD. Ekspor PDF gambar kerja, DXF (R12–2018/2027), dan DAE untuk SketchUp.">
+<meta name="theme-color" content="#1f232a">
+<title>Amatu CAD</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23101c2e'/%3E%3Cpath d='M7 25L16 6l9 19M11 18h10' fill='none' stroke='%23F2C94C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <header id="titlebar">
+    <button id="appbtn" title="Application Menu"><svg viewBox="0 0 32 32"><path d="M7 25L16 6l9 19M11 18h10" fill="none" stroke="#F2C94C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div id="qat"></div>
+    <div id="title"><span class="brand">Amatu CAD 2027</span><span id="docname">Drawing1.dwg</span></div>
+    <div id="searchbox"><svg viewBox="0 0 32 32"><circle cx="14" cy="14" r="8" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 20l7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><input id="search" placeholder="Type a keyword or phrase" autocomplete="off"></div>
+    <div id="tright"></div>
+  </header>
+  <nav id="rtabs"></nav>
+  <section id="ribbon"></section>
+  <div id="filetabs"></div>
+  <main id="main">
+    <aside id="props" class="palette docked"></aside>
+    <div id="wrap">
+      <canvas id="cv-base"></canvas><canvas id="cv-sel"></canvas><canvas id="cv-over"></canvas>
+      <div id="vplabel"><span data-m="vp">[–]</span><span data-m="view">[Top]</span><span data-m="vs">[2D Wireframe]</span></div>
+      <div id="navbar"></div>
+      <div id="dyn"></div>
+      <div id="cmd">
+        <div id="cmdhist"></div>
+        <div id="cmdbar">
+          <button id="cmdx" title="Close command line (Ctrl+9)">×</button>
+          <button id="cmdcust" title="Customize">⚙</button>
+          <span id="cmdico" title="Recent commands">›_</span>
+          <div id="cmdfield"><span id="cmdprompt"></span><input id="cmdin" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Command line"></div>
+          <div id="ac"></div>
+        </div>
+      </div>
+      <div id="startpage" hidden></div>
+    </div>
+  </main>
+  <footer id="status"><div id="ltabs"></div><div id="sright"></div></footer>
+</div>
+<div id="overlay"></div>
+<input type="file" id="filein" hidden>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
