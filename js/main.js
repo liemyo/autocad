@@ -44,7 +44,7 @@ class App {
     this.ui.print('Amatu CAD 2027 — ketik perintah (mis. L, PL, C, REC, TR, O, DLI) atau F1 untuk bantuan.', 'ok');
     this.restore();
     window.addEventListener('beforeunload', e => { this.persistSession(); if (this.docs.some(d => d.dirty && !d.saved)) { e.preventDefault(); e.returnValue = ''; } });
-    window.addEventListener('resize', () => this.ed.resize());
+    window.addEventListener('resize', () => { this.ed.resize(); this.ui?.fitRibbon(); });
     document.addEventListener('visibilitychange', () => { if (document.hidden) this.persistSession(); });
     this.bindDrop();
   }
@@ -418,7 +418,7 @@ class App {
     C('UI_LAYOUTTABS', () => { const f = $('#ltabs'); f.style.display = f.style.display === 'none' ? '' : 'none'; }, { noEcho: true });
     C('UI_NAVBAR', () => { const n = $('#navbar'); n.style.display = n.style.display === 'none' ? '' : 'none'; }, { noEcho: true, alias: ['NAVBAR'] });
     C('UI_THEME', () => this.ui.toggleTheme(), { noEcho: true });
-    C('UI_RIBMIN', () => { $('#app').classList.toggle('ribmin'); this.ed.resize(); }, { noEcho: true });
+    C('UI_RIBMIN', () => { $('#app').classList.toggle('ribmin'); this.ed.resize(); this.ui.fitRibbon(); }, { noEcho: true });
     C('UI_ZOOMIN', ed => ed.zoomAt(ed.view.w / 2, ed.view.h / 2, 1.5), { transparent: true, noEcho: true });
     C('UI_ZOOMOUT', ed => ed.zoomAt(ed.view.w / 2, ed.view.h / 2, 1 / 1.5), { transparent: true, noEcho: true });
     // kontrol tab Hatch Creation (mengirim opsi ke perintah HATCH aktif)

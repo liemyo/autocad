@@ -116,7 +116,7 @@ export class UI {
     const tabs = [...Object.keys(RIBBON)];
     for (const t of tabs) T.append(h('button', { class: t === this.tab && !this.ctxTab ? 'on' : '', onclick: () => { this.tab = t; this.ctxTab = null; this.buildTabs(); this.buildRibbon(); } }, t));
     if (this.ctxTab) T.append(h('button', { class: 'ctx on' }, this.ctxTab.name));
-    T.append(h('button', { class: 'rmin', title: 'Minimize ribbon', onclick: () => $('#app').classList.toggle('ribmin') }, '▴▾'));
+    T.append(h('button', { class: 'rmin', title: 'Minimize ribbon', onclick: () => { $('#app').classList.toggle('ribmin'); this.ed.resize(); this.fitRibbon(); } }, '▴▾'));
   }
   buildRibbon() {
     const R = this.el.ribbon; R.innerHTML = '';
@@ -126,6 +126,32 @@ export class UI {
       for (const it of p.items) body.append(this.ritem(it));
       R.append(h('div', { class: 'rpanel' }, body, h('div', { class: 'rtitle' }, p.n, ' ▾')));
     }
+    this.fitRibbon();
+  }
+  // Ribbon adaptif seperti AutoCAD: panel paling kanan diciutkan jadi satu tombol (flyout) sampai muat tanpa scroll.
+  fitRibbon() {
+    const R = this.el.ribbon; if (!R.isConnected || !R.clientWidth) return;
+    const panels = this.ctxTab ? this.ctxTab.panels : RIBBON[this.tab];
+    const els = [...R.children];
+    els.forEach((el, i) => { if (el._full) { el.replaceWith(el._full); els[i] = el._full; } });
+    const firstIcon = items => { for (const it of items) { if (it.t === 'col') { const r = firstIcon(it.items); if (r) return r; } else if (it.i || it.dd) return it.dd ? it.dd[0].i : it.i; } return 'panel'; };
+    for (let i = els.length - 1; i >= 0 && R.scrollWidth > R.clientWidth + 1; i--) {
+      const full = els[i], p = panels[i]; if (!p) continue;
+      const btn = h('button', { class: 'rbig', title: p.n }, h('span', { html: icon(firstIcon(p.items)) }), h('span', {}, p.n, h('span', { class: 'dd arrow' }, '▾')));
+      btn.onclick = () => this.panelFlyout(full, btn);
+      const mini = h('div', { class: 'rpanel mini' }, h('div', { class: 'rbody' }, btn), h('div', { class: 'rtitle' }, p.n));
+      mini._full = full; full.replaceWith(mini); els[i] = mini;
+    }
+  }
+  panelFlyout(full, btn) {
+    closeMenu();
+    const r = btn.getBoundingClientRect(), body = full.querySelector('.rbody');
+    const fly = h('div', { class: 'rflyout' }, body);
+    const done = () => { full.prepend(body); fly.remove(); document.removeEventListener('pointerdown', off, true); };
+    const off = e => { if (!fly.contains(e.target) || e.target.closest('.rsm,.rbig')) setTimeout(done, 0); };
+    document.getElementById('overlay').append(fly);
+    fly.style.top = r.bottom + 2 + 'px'; fly.style.left = Math.max(4, Math.min(r.left, innerWidth - fly.offsetWidth - 4)) + 'px';
+    setTimeout(() => document.addEventListener('pointerdown', off, true), 0);
   }
   ritem(it) {
     if (it.t === 'col') return h('div', { class: 'rcol' }, ...it.items.map(x => this.ritem(x)));
