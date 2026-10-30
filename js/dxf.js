@@ -74,6 +74,7 @@ export async function exportDXF(doc, opt = {}) {
     if (e.lt && e.lt !== 'ByLayer' && LTYPES[e.lt]) out.push(['6', e.lt]); else if (e.lt === 'ByBlock') out.push(['6', 'BYBLOCK']);
     if (e.color !== undefined && e.color !== 256) out.push(['62', String(e.color)]);
     if (!r12 && e.lw !== undefined && e.lw !== -1) out.push(['370', String(e.lw)]);
+    if (!r12 && e.lts && e.lts !== 1) out.push(['48', num(e.lts)]);
     if (!r12 && e.rgb) out.push(['420', String(parseInt(e.rgb.slice(1), 16))]);
   };
   const P = (out, c, p) => out.push([String(c), num(p.x)], [String(c + 10), num(p.y)], [String(c + 20), '0']);

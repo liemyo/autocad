@@ -90,13 +90,14 @@ export function drawText(ctx, q, v, color) {
     if (fs < 0.3) return;
     const w = textW(q.s, q.h, q.wf || 1) * v.scale;
     ctx.save(); ctx.translate(x, y); ctx.rotate(-(q.rot || 0)); ctx.fillStyle = color; ctx.globalAlpha *= 0.5;
-    ctx.fillRect(-(q.ha || 0) * w / 2, -fs * 0.7, w, Math.max(0.5, fs * 0.6)); ctx.restore(); return;
+    const gy = -[0, 0.3 * q.h, -q.h / 2, -q.h][q.va || 0] * v.scale;
+    ctx.fillRect(-(q.ha || 0) * w / 2, gy - fs * 0.7, w, Math.max(0.5, fs * 0.6)); ctx.restore(); return;
   }
   ctx.save(); ctx.translate(x, y); ctx.rotate(-(q.rot || 0)); if (q.wf && q.wf !== 1) ctx.scale(q.wf, 1);
   ctx.font = `${fs}px ${FONT}`; ctx.fillStyle = color; ctx.textBaseline = 'alphabetic';
   ctx.textAlign = ['left', 'center', 'right'][q.ha || 0];
   const by = [0, 0.3 * q.h, -q.h / 2, -q.h][q.va || 0] * v.scale;
-  ctx.fillText(q.s, 0, by);
+  ctx.fillText(q.s, 0, -by); // sumbu-y layar terbalik terhadap dunia
   ctx.restore();
 }
 function drawPoint(ctx, q, v, doc, color) {
